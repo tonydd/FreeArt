@@ -25,8 +25,9 @@ public class GImage {
                     out.println("<div class=\"display\" >");
                     out.println("<img src=\"img/2012-12-10 12.53.06.jpg\" class=\"display\" /> ");
                     out.println("<div class=\"actions\">");
+                    out.println("Titre de la photo");
                     out.println("<img src=\"img/comment.png\" class=\"action\" title=\"Commenter\" />");
-                    out.println("<img src=\"img/addPanier.png\" class=\"action\" title=\"Ajouter au panier\" />");
+                    out.println("<img src=\"img/addPanier.png\" class=\"action\" title=\"Ajouter au panier\" id=\"Photo test\" onclick=\"addArticleToPanier(this)\" />");
                     out.println("</div>");
                     out.println("</div>");
                 }

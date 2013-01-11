@@ -3,6 +3,8 @@
  * and open the template in the editor.
  */
 
+var panier = Array();
+
 $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
 $(document).ready(function () 
@@ -101,6 +103,19 @@ function logUser()
             }
         }
     );
+}
+
+function addArticleToPanier(element)
+{
+    $.growlUI(element.id, 'A été ajouté à votre panier !'); 
+    panier.push(element.id);
+    
+    document.getElementById('panierCount').innerHTML = panier.length;
+    
+    if (panier.length > 0)
+    {
+        document.getElementById('panierCount').innerHTML += ' <a href="#">Voir le contenu</a>';
+    }
 }
 
 

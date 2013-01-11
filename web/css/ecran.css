@@ -1,7 +1,7 @@
 /* 
     Document   : ecran
     Created on : 14 déc. 2012, 16:03:23
-    Author     : Tony MERDE
+    Author     : Tony
     Description:
         Purpose of the stylesheet follows. Test
 */
@@ -43,8 +43,7 @@ background: linear-gradient(to bottom, #b7deed 0%,#71ceef 50%,#21b4e2 51%,#b7dee
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b7deed', endColorstr='#b7deed',GradientType=0 ); /* IE6-9 */}
 
 header h1{
-    float: left;
-    margin-left: 15%;
+    text-align: center;
     color: white;
     margin-bottom: 1%;
 }
@@ -125,6 +124,8 @@ div#mainContainer
     height: 85%;
     padding-left: 50px;
     overflow: auto;
+    background-color: #E5F6FF;
+    z-index: -1;
 }
 
 div.display
@@ -187,6 +188,7 @@ div.actions
     border-radius: 5px;
     background-color: gainsboro;
     margin-top: -5px;
+    min-height: 40px;
 }
     img.action
     {
@@ -194,6 +196,7 @@ div.actions
         height: 30px;
         display: inline-block;
         margin: 5px 10px 5px 10px;
+        float: right;
     }
     
     img.action:hover
