@@ -3,11 +3,15 @@
  * and open the template in the editor.
  */
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -15,6 +19,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -74,16 +83,65 @@ public class MainController extends HttpServlet {
         if ("categories".equals(data))
         {
             ArrayList<Categorie> cat = Categorie.getCategories();
-//            out.println("lol : " + cat);
             for (Categorie c : cat)
             {
                 out.println("<li onclick=\"changeCategorie(this)\" id=\"" + c.getId() + "\" >" + c.getCategorie() + "</li>");
             }
         }
         
+        else if ("categories_select".equals(data))
+        {
+            ArrayList<Categorie> cat = Categorie.getCategories();
+            for (Categorie c : cat)
+            {
+                out.println("<option value=\"" + c.getId() + "\" >" + c.getCategorie() + "</li>");
+            }
+        }
+        
+        else if ("details".equals(data))
+        {
+            try {
+                GImage.getImageDetails(Integer.parseInt(request.getParameter("imgId")), out);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        else if ("imgCategorie".equals(data))
+        {
+            try {
+                GImage.getImagesByCategorie(Integer.parseInt(request.getParameter("categorie")), out);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        else if ("search".equals(data))
+        {
+            try {
+                try {
+                    GImage.search(request.getParameter("exp"), out);
+                } catch (ParseException ex) {
+                    Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
         else if ("images".equals(data))
         {
-            GImage.getImages(request, response);
+            try {
+                GImage.getLastImages(request, response);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         out.close();
@@ -107,16 +165,34 @@ public class MainController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
+        
         if ("login".equals(action))
         {
-            if(Login.login(request.getParameter("txt_login"), request.getParameter("txt_passwd")))
+            GPersonne.login(request, request.getParameter("txt_login"), request.getParameter("txt_password"), out);           
+        }
+        else if ("logout".equals(action))
+        {
+            GPersonne.logout(request);
+        }
+        
+        else if ("subscribe".equals(action))
+        {
+            GPersonne.createUser(request.getParameter("login"), request.getParameter("password"), request.getParameter("mail"), out);
+        }
+        
+        else //UPLOAD
+        {
+            try 
             {
-                out.println("LOGGED");
-            }
-            else
+                String yourTempDirectory = getServletContext().getRealPath("/photos/");
+                GImage.uploadImage(request, response, yourTempDirectory);
+            } 
+            catch (Exception ex) 
             {
-                out.println("KO");
+                out.println(ex);
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
         }
         
         out.close();
